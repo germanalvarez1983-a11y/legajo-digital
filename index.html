@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Legajo Digital - JetSMART</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,sans-serif;font-size:14px;background:#f0f2f8;color:#1a2038}
+.hdr{background:#1a2a6c;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;position:sticky;top:0;z-index:100}
+.hdr-logo{color:#fff;font-weight:700;font-size:15px}
+.hdr-logo span{color:rgba(255,255,255,0.6);font-weight:400;font-size:12px;margin-left:8px;padding-left:8px;border-left:1px solid rgba(255,255,255,0.2)}
+.hdr-btn{background:rgba(255,255,255,0.15);color:#fff;border:1px solid rgba(255,255,255,0.25);border-radius:8px;padding:7px 14px;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit}
+.tabs{background:#fff;border-bottom:1px solid #e2e6f0;padding:0 24px;display:flex}
+.tab{padding:13px 18px;font-size:13px;font-weight:500;color:#6b7399;cursor:pointer;border-bottom:2px solid transparent}
+.tab.on{color:#1a2a6c;border-bottom-color:#1a2a6c;font-weight:600}
+.tab-r{margin-left:auto}
+.wrap{display:grid;grid-template-columns:280px 1fr;min-height:calc(100vh - 105px)}
+.side{background:#fff;border-right:1px solid #e2e6f0;padding:16px;overflow-y:auto;height:calc(100vh - 105px)}
+.side-ttl{font-size:11px;font-weight:600;color:#6b7399;text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px}
+.srch{background:#f7f8fc;border:1px solid #e2e6f0;border-radius:8px;padding:8px 12px;display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.srch input{background:none;border:none;outline:none;font-size:13px;font-family:inherit;color:#1a2038;width:100%}
+.itm{padding:10px 11px;border-radius:9px;cursor:pointer;display:flex;align-items:center;gap:9px;border:1px solid transparent;margin-bottom:2px}
+.itm:hover{background:#f7f8fc}
+.itm.on{background:#e8efff;border-color:rgba(79,124,255,.25)}
+.av{width:34px;height:34px;border-radius:9px;background:#1a2a6c;color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+.itm.on .av{background:#4f7cff}
+.inf{flex:1;min-width:0}
+.nm{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rk{font-size:11px;color:#6b7399;margin-top:1px}
+.main{padding:22px 26px;overflow-y:auto}
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:60vh;gap:10px;color:#6b7399;text-align:center}
+.pcard{background:#fff;border:1px solid #e2e6f0;border-radius:14px;padding:18px 22px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between}
+.pcard-l{display:flex;align-items:center;gap:14px}
+.bav{width:50px;height:50px;border-radius:14px;background:#1a2a6c;color:#fff;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:700}
+.pcard h1{font-size:18px;font-weight:700}
+.tags{display:flex;gap:5px;margin-top:6px;flex-wrap:wrap}
+.tag{padding:2px 9px;border-radius:20px;font-size:11px;font-weight:600}
+.tcp{background:#dbeafe;color:#1e40af}
+.tfo{background:#ede9fe;color:#6d28d9}
+.tg{background:#f3f4f6;color:#6b7280;border:1px solid #e5e7eb}
+.pbtn{background:#1a2a6c;color:#fff;border:none;border-radius:9px;padding:9px 16px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
+.krow{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px}
+.kc{background:#fff;border:1px solid #e2e6f0;border-radius:14px;padding:16px 18px}
+.kl{font-size:11px;font-weight:500;color:#6b7399;text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px}
+.kv{font-size:28px;font-weight:700;letter-spacing:-1px}
+.kv.ok{color:#16a34a}.kv.warn{color:#d97706}.kv.danger{color:#dc2626}
+.ks{font-size:11px;color:#6b7399;margin-top:3px}
+.dgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:11px}
+.dc{background:#fff;border:1px solid #e2e6f0;border-radius:12px;overflow:hidden}
+.dt{height:4px}
+.dt.ok{background:#16a34a}.dt.warn{background:#d97706}.dt.danger{background:#dc2626}.dt.missing{background:#c8cfe8}
+.db{padding:13px 15px}
+.di{font-size:20px;margin-bottom:8px}
+.dn{font-size:12px;font-weight:600;margin-bottom:4px;line-height:1.4}
+.dd{font-size:12px;color:#6b7399;font-family:monospace;margin-bottom:7px}
+.dp{display:inline-flex;font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px}
+.dp.ok{background:#dcfce7;color:#16a34a}.dp.warn{background:#fef3c7;color:#d97706}.dp.danger{background:#fee2e2;color:#dc2626}.dp.missing{background:#f3f4f6;color:#6b7280}
+.ddays{font-size:11px;color:#6b7399;margin-top:4px}
+.sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.st{font-size:13px;font-weight:600}
+.ss{font-size:12px;color:#6b7399}
+.ap{background:#fff8f8;border:1px solid #fecaca;border-radius:14px;padding:16px 18px;margin-bottom:18px}
+.at{font-size:12px;font-weight:600;color:#dc2626;text-transform:uppercase;letter-spacing:.07em;margin-bottom:12px}
+.ai{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #e2e6f0}
+.ai:last-child{border-bottom:none;padding-bottom:0}
+.bdg{font-size:11px;font-weight:600;padding:2px 9px;border-radius:20px}
+.bdg.danger{background:#fee2e2;color:#dc2626;border:1px solid #fecaca}
+.bdg.warn{background:#fef3c7;color:#d97706;border:1px solid #fde68a}
+.ov{display:none;position:fixed;inset:0;background:rgba(26,42,108,.4);z-index:200;align-items:center;justify-content:center}
+.ov.open{display:flex}
+.mod{background:#fff;border-radius:18px;width:500px;max-width:95vw;padding:28px;border:1px solid #e2e6f0}
+.mttl{font-size:16px;font-weight:700;margin-bottom:6px}
+.msub{font-size:13px;color:#6b7399;margin-bottom:20px;line-height:1.6}
+.uz{border:2px dashed #c8cfe8;border-radius:12px;padding:32px 20px;text-align:center;cursor:pointer;margin-bottom:16px;position:relative;background:#f7f8fc}
+.uz:hover{border-color:#4f7cff;background:#e8efff}
+.uz input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.pv{display:none;margin-bottom:14px}
+.pv.show{display:block}
+.pv img{width:100%;border-radius:10px;max-height:190px;object-fit:contain;background:#f7f8fc;border:1px solid #e2e6f0}
+.az{display:none;align-items:center;gap:10px;padding:12px 15px;background:#e8efff;border:1px solid rgba(79,124,255,.3);border-radius:10px;margin-bottom:14px;font-size:13px;color:#4f7cff;font-weight:500}
+.az.show{display:flex}
+.spin{width:15px;height:15px;border:2px solid rgba(79,124,255,.2);border-top-color:#4f7cff;border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+.rb{display:none;background:#f7f8fc;border:1px solid #c8cfe8;border-radius:12px;overflow:hidden;margin-bottom:16px}
+.rb.show{display:block}
+.rh{background:#1a2a6c;color:#fff;padding:9px 15px;font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase}
+.rr{display:flex;justify-content:space-between;align-items:center;padding:9px 15px;border-bottom:1px solid #e2e6f0;gap:10px}
+.rr:last-child{border-bottom:none}
+.rl{font-size:12px;color:#6b7399;font-weight:500}
+.rv{font-size:13px;font-weight:600;text-align:right}
+.rv.hi{color:#4f7cff}
+.ma{display:flex;gap:9px;justify-content:flex-end}
+.bcn{background:#f7f8fc;border:1px solid #c8cfe8;color:#1a2038;border-radius:9px;padding:9px 18px;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit}
+.bco{background:#1a2a6c;color:#fff;border:none;border-radius:9px;padding:9px 18px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;display:none}
+.bco.show{display:inline-block}
+.toast{position:fixed;bottom:22px;right:22px;background:#1a2a6c;color:#fff;padding:11px 18px;border-radius:10px;font-size:13px;font-weight:500;transform:translateY(80px);opacity:0;transition:all .3s;z-index:300}
+.toast.show{transform:translateY(0);opacity:1}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <div class="hdr-logo">✈ JetSMART <span>Legajo Digital</span></div>
+  <button class="hdr-btn" id="scan-btn">Escanear documento</button>
+</div>
+<div class="tabs">
+  <div class="tab on">Tripulantes de Mando</div>
+  <div class="tab">Tripulantes de Cabina</div>
+  <div class="tab tab-r">Vencimientos criticos</div>
+</div>
+<div class="wrap">
+  <div class="side">
+    <div class="side-ttl">Directorio (197 pilotos)</div>
+    <div class="srch"><input type="text" id="srch" placeholder="Buscar por nombre o legajo..."></div>
+    <div id="plist"></div>
+  </div>
+  <div class="main" id="main">
+    <div class="empty">
+      <div style="font-size:48px">📂</div>
+      <h2 style="font-size:16px;font-weight:600;color:#1a2038">Selecciona un piloto</h2>
+      <p style="font-size:13px;line-height:1.6;max-width:280px">Elige un piloto del directorio para ver su legajo completo.</p>
+    </div>
+  </div>
+</div>
+<div class="ov" id="ov">
+  <div class="mod">
+    <div class="mttl">📷 Escanear documento</div>
+    <div class="msub">Subi una foto. La IA detecta el tipo, titular y fecha de vencimiento automaticamente.</div>
+    <div class="uz" id="uz">
+      <input type="file" accept="image/*" id="file-input">
+      <div style="font-size:34px;margin-bottom:10px">📄</div>
+      <div style="font-size:14px;font-weight:600;margin-bottom:3px">Arrastra o haz clic para subir</div>
+      <div style="font-size:12px;color:#6b7399">JPG, PNG</div>
+    </div>
+    <div class="pv" id="pv"><img id="pimg" src="" alt=""></div>
+    <div class="az" id="az"><div class="spin"></div><span>Analizando con IA...</span></div>
+    <div class="rb" id="rb">
+      <div class="rh">Resultado del analisis</div>
+      <div class="rr"><span class="rl">Tipo</span><span class="rv hi" id="r-type">-</span></div>
+      <div class="rr"><span class="rl">Titular</span><span class="rv" id="r-name">-</span></div>
+      <div class="rr"><span class="rl">Numero</span><span class="rv" id="r-num">-</span></div>
+      <div class="rr"><span class="rl">Vencimiento</span><span class="rv hi" id="r-date">-</span></div>
+      <div class="rr"><span class="rl">Observaciones</span><span class="rv" id="r-notes">-</span></div>
+    </div>
+    <div class="ma">
+      <button class="bcn" id="btn-cancel">Cancelar</button>
+      <button class="bco" id="btn-save">Guardar en legajo</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+var RAW = [{"id":"28055409","name":"Almada, Martín","rank":"CP","years":3},{"id":"28169328","name":"Alvarez, Gustavo","rank":"CP","years":3},{"id":"31239772","name":"Alvarez Rubio, Facundo","rank":"CP","years":1},{"id":"23335547","name":"Aquino, Gabriel","rank":"CP","years":1},{"id":"31526695","name":"Araujo, Pablo","rank":"CP","years":7},{"id":"23126391","name":"Argüello, Martín","rank":"CP","years":6},{"id":"26214116","name":"Arias, Ramiro","rank":"CP","years":6},{"id":"35117690","name":"Arnoni, Guido","rank":"CP","years":4},{"id":"26000786","name":"Arroyo, Facundo","rank":"CP","years":2},{"id":"23514710","name":"Baez, Conrado Manuel","rank":"CP","years":2},{"id":"16181324","name":"Barbosa, Daniel","rank":"CP","years":3},{"id":"16726009","name":"Berástegui, Daniel","rank":"CP","years":7},{"id":"29434339","name":"Betro, Daniel","rank":"CP","years":2},{"id":"29262497","name":"Bianchi, Federico","rank":"CP","years":1},{"id":"18097546","name":"Bianchi, Hernan","rank":"CP","years":1},{"id":"27673643","name":"Bitschin, Diego","rank":"CP","years":6},{"id":"30980705","name":"Blanco, Lucas","rank":"CP","years":6},{"id":"16904098","name":"Bono, Sergio","rank":"CP","years":1},{"id":"35273197","name":"Botana, Nicolás","rank":"CP","years":6},{"id":"32830859","name":"Bruggia, Martín","rank":"CP","years":4},{"id":"14757434","name":"Buscarino, Gabriel","rank":"CP","years":3},{"id":"33944065","name":"Buxton, Cristian","rank":"CP","years":7},{"id":"10728849","name":"Buxton, Martin","rank":"CP","years":1},{"id":"32013017","name":"Caballero, Andres","rank":"CP","years":1},{"id":"18205367","name":"Cabano, Marcelo","rank":"CP","years":7},{"id":"18527179","name":"Canavesi, Oscar","rank":"CP","years":1},{"id":"31285535","name":"Carreras, Pablo","rank":"CP","years":7},{"id":"27291803","name":"Castaño, German","rank":"CP","years":2},{"id":"25146575","name":"Castillo, Christian ","rank":"CP","years":1},{"id":"27152655","name":"Chunco, Cesar","rank":"CP","years":2},{"id":"29940564","name":"Cohen, Tomas","rank":"CP","years":1},{"id":"40076645","name":"Colodro, Lucas","rank":"CP","years":7},{"id":"29347895","name":"Condigiani, Franco","rank":"CP","years":3},{"id":"22347238","name":"Del Alamo, Diego","rank":"CP","years":4},{"id":"36155852","name":"Digilio, Juan Facundo","rank":"CP","years":4},{"id":"30079380","name":"Ermacora, Pedro","rank":"CP","years":1},{"id":"31240249","name":"Escobar, Martín","rank":"CP","years":7},{"id":"21463305","name":"Etcheves, Enrique","rank":"CP","years":1},{"id":"30743920","name":"Franco, Rodrigo ","rank":"CP","years":4},{"id":"32869613","name":"Fraomeni, Agustin","rank":"CP","years":3},{"id":"24300207","name":"Frisoli, Francisco","rank":"CP","years":5},{"id":"38457200","name":"Gambini, Franco","rank":"CP","years":6},{"id":"25178966","name":"García Imaz, Ariel","rank":"CP","years":6},{"id":"30744941","name":"Gentile, Carlos","rank":"CP","years":4},{"id":"33469146","name":"Gentiletti, Giuliano","rank":"CP","years":4},{"id":"23374987","name":"Gil, Martin","rank":"CP","years":2},{"id":"27934807","name":"Giovini, Natalia","rank":"CP","years":3},{"id":"28656803","name":"Gómez, Luciano","rank":"CP","years":6},{"id":"24378147","name":"Gutierrez, Ariel","rank":"CP","years":6},{"id":"29529432","name":"Hernandez Martin","rank":"CP","years":1},{"id":"25134322","name":"Iglesias, Juan Martin","rank":"CP","years":3},{"id":"27739725","name":"Krausse, Federico","rank":"CP","years":3},{"id":"29846520","name":"La Cona, Esteban","rank":"CP","years":4},{"id":"34098344","name":"Laportte Martín","rank":"CP","years":1},{"id":"32243161","name":"Lascombes, Ignacio ","rank":"CP","years":4},{"id":"30374407","name":"Lavia, Javier","rank":"CP","years":7},{"id":"27287226","name":"López, Alejandro","rank":"CP","years":7},{"id":"35043525","name":"López Fundaro, Paulo","rank":"CP","years":3},{"id":"16815225","name":"Lopez Sierra, Andres","rank":"CP","years":1},{"id":"36401848","name":"Luque, Tomas","rank":"CP","years":1},{"id":"21061106","name":"Masci, Andres","rank":"CP","years":1},{"id":"35347061","name":"Mendoza, Guillermo","rank":"CP","years":4},{"id":"35381582","name":"Mettler, Kevin","rank":"CP","years":6},{"id":"17657084","name":"Molteni, Carlos","rank":"CP","years":1},{"id":"23214837","name":"Montecino, Flavio","rank":"CP","years":4},{"id":"25560020","name":"Morali, Ricardo","rank":"CP","years":2},{"id":"28956338","name":"Moris, Mauro","rank":"CP","years":7},{"id":"14580697","name":"Niclis, Sergio","rank":"CP","years":3},{"id":"16273698","name":"Nicolini, Gustavo","rank":"CP","years":1},{"id":"29191450","name":"Ortega, Tomas","rank":"CP","years":4},{"id":"32028219","name":"Palacio, Pablo","rank":"CP","years":5},{"id":"25712529","name":"Paolicelli, Pablo","rank":"CP","years":6},{"id":"21680297","name":"Paz, Luis Alberto","rank":"CP","years":2},{"id":"30912643","name":"Pellegrini, Maximiliano","rank":"CP","years":3},{"id":"21633235","name":"Peralta Ramos, Claudio","rank":"CP","years":2},{"id":"17410782","name":"Peralta, Gonzalo","rank":"CP","years":1},{"id":"21696277","name":"Pignoux, Gaston","rank":"CP","years":3},{"id":"16151892","name":"Radice, Oscar","rank":"CP","years":3},{"id":"30556444","name":"Rendich, Hernán","rank":"CP","years":6},{"id":"29585250","name":"Reynolds, Mauro","rank":"CP","years":6},{"id":"24782979","name":"Riquelme, Gustavo","rank":"CP","years":6},{"id":"28078791","name":"Romero, Juan Martin","rank":"CP","years":1},{"id":"16392632","name":"Rodriguez, Cristían","rank":"CP","years":4},{"id":"26836333","name":"Rodriguez, Fernando","rank":"CP","years":1},{"id":"36841503","name":"Ruiz Diaz, Manuel","rank":"CP","years":1},{"id":"24207000","name":"Salinas, Sergio","rank":"CP","years":1},{"id":"38851012","name":"Salvatore, Ivan ","rank":"CP","years":4},{"id":"32456680","name":"Sassone, Leandro","rank":"CP","years":6},{"id":"30700399","name":"Sceppacuercia, Ignacio","rank":"CP","years":3},{"id":"24760219","name":"Schwindt, Matías","rank":"CP","years":4},{"id":"38256812","name":"Suaya, Matías","rank":"CP","years":7},{"id":"29809449","name":"Suñe, Julian","rank":"CP","years":3},{"id":"35149550","name":"Tacca, Alejandro","rank":"CP","years":1},{"id":"29325861","name":"Temporetti, Bruno","rank":"CP","years":6},{"id":"32402217","name":"Tomas, Santiago","rank":"CP","years":7},{"id":"23459950","name":"Tomba, Ramiro","rank":"CP","years":1},{"id":"17366821","name":"Toribio, Gustavo","rank":"CP","years":1},{"id":"26649065","name":"Tordini, Julián","rank":"CP","years":6},{"id":"25376812","name":"Varela, Pablo","rank":"CP","years":1},{"id":"36327667","name":"Vasili, Matías","rank":"CP","years":7},{"id":"18814672","name":"Vera, Nicolas ","rank":"CP","years":4},{"id":"28208915","name":"Villarroel, Franco","rank":"CP","years":1},{"id":"32616941","name":"Volpi, Sergio","rank":"CP","years":4},{"id":"39337704","name":"Alessio Leandro","rank":"FO","years":2},{"id":"31036942","name":"Alvarez Nava, Martin","rank":"FO","years":1},{"id":"34330643","name":"Alvez, Ezequiel","rank":"FO","years":1},{"id":"20233668","name":"Anzuinelli, Alejandro","rank":"FO","years":2},{"id":"31177903","name":"Araujo, Ezequiel","rank":"FO","years":1},{"id":"35517799","name":"Auteri Di Turi, Luciano","rank":"FO","years":1},{"id":"38852957","name":"Barreira, Damian","rank":"FO","years":3},{"id":"37999532","name":"Beltramone, Aldana","rank":"FO","years":3},{"id":"33695628","name":"Bertoldi, Fabrizio","rank":"FO","years":2},{"id":"43018690","name":"Blanco, Salvador","rank":"FO","years":2},{"id":"37737688","name":"Caballero, Lucas ","rank":"FO","years":3},{"id":"38072336","name":"Cadez, Agustin","rank":"FO","years":1},{"id":"31464267","name":"Capolupo, Pablo","rank":"FO","years":1},{"id":"38893639","name":"Caputo, Luis","rank":"FO","years":1},{"id":"31050279","name":"Cardarelli, Gabriel","rank":"FO","years":1},{"id":"39625676","name":"Carrizo, Facundo","rank":"FO","years":3},{"id":"31057867","name":"Castro, Nestor Germán","rank":"FO","years":3},{"id":"37211044","name":"Cipolini,  Santiago","rank":"FO","years":3},{"id":"38789580","name":"Collar, Valentin","rank":"FO","years":1},{"id":"31070137","name":"Cordoba, Ivan","rank":"FO","years":3},{"id":"40877537","name":"Del Alamo, Nicolas","rank":"FO","years":2},{"id":"27396357","name":"Dell Oro, Carlos","rank":"FO","years":1},{"id":"38992810","name":"Digilio, Gaston","rank":"FO","years":2},{"id":"37666175","name":"Dignani, Leonel","rank":"FO","years":1},{"id":"28264217","name":"Drigani, Alejandro","rank":"FO","years":1},{"id":"39644674","name":"Ebner, Geronimo","rank":"FO","years":1},{"id":"37035420","name":"Echegoyen, Lucas ","rank":"FO","years":4},{"id":"22047706","name":"Eisler, Maria Luali","rank":"FO","years":4},{"id":"30938350","name":"Fascendini, Gonzalo","rank":"FO","years":1},{"id":"40513863","name":"Fernandez, Gonzalo","rank":"FO","years":1},{"id":"39760546","name":"Flores, Agustin","rank":"FO","years":2},{"id":"38995554","name":"Florio, Marcos","rank":"FO","years":3},{"id":"39766360","name":"Fontana, Lucia","rank":"FO","years":2},{"id":"30970620","name":"Franzutti, Fernando ","rank":"FO","years":4},{"id":"38069804","name":"Garcia, Joaquin","rank":"FO","years":3},{"id":"30067110","name":"Giannattasio, Gabriel","rank":"FO","years":1},{"id":"41127755","name":"Giner, Tomas","rank":"FO","years":2},{"id":"39657051","name":"Gonzalez, Ignacio","rank":"FO","years":2},{"id":"18862661","name":"Grosso, Leonardo","rank":"FO","years":1},{"id":"40731766","name":"Habibo, Matias","rank":"FO","years":2},{"id":"40709088","name":"Halberstadt, Jose ","rank":"FO","years":2},{"id":"37867787","name":"Hernández, Facundo","rank":"FO","years":1},{"id":"94071251","name":"Hiemer, Robin","rank":"FO","years":1},{"id":"39467496","name":"Insua, Agustin","rank":"FO","years":2},{"id":"37642918","name":"Intebi, Matías Ezra","rank":"FO","years":3},{"id":"39373706","name":"Issac, German","rank":"FO","years":2},{"id":"42399940","name":"Iurchuck, Juan Pablo","rank":"FO","years":2},{"id":"39835223","name":"Jonte, Manuel","rank":"FO","years":1},{"id":"39920565","name":"Kern, Marcos","rank":"FO","years":2},{"id":"26405467","name":"Labat, Nicolas","rank":"FO","years":1},{"id":"42646222","name":"Longo, Santiago","rank":"FO","years":1},{"id":"39509627","name":"Lopez, Fernando","rank":"FO","years":1},{"id":"41778602","name":"Lusa, Agustin","rank":"FO","years":1},{"id":"36630156","name":"Maddaleni, Matías","rank":"FO","years":6},{"id":"41087340","name":"Mammana, Eduardo ","rank":"FO","years":2},{"id":"37838851","name":"Marchese, Matias","rank":"FO","years":2},{"id":"35453300","name":"Marega, Joel","rank":"FO","years":1},{"id":"37614311","name":"Marquez, Gustavo","rank":"FO","years":2},{"id":"39244088","name":"Martinez Francisco","rank":"FO","years":1},{"id":"33120351","name":"Martínez Hernan","rank":"FO","years":1},{"id":"39758989","name":"Mena, Lucas Martin","rank":"FO","years":2},{"id":"36363911","name":"Miguelena, Facundo","rank":"FO","years":3},{"id":"38291326","name":"Mirasso Amilcar","rank":"FO","years":1},{"id":"35533918","name":"Nieva, Federico","rank":"FO","years":1},{"id":"35831500","name":"Olivera, Angel","rank":"FO","years":1},{"id":"40549275","name":"Palomares, Federico","rank":"FO","years":1},{"id":"38146782","name":"Parra, Ivan","rank":"FO","years":1},{"id":"39650209","name":"Peña, Francisco ","rank":"FO","years":2},{"id":"30873357","name":"Peña, Pedro Esteban","rank":"FO","years":2},{"id":"38437960","name":"Peralta, Tomas","rank":"FO","years":2},{"id":"37118332","name":"Pileggi, Alejandro","rank":"FO","years":6},{"id":"25984950","name":"Piuma, Martiniano","rank":"FO","years":1},{"id":"36141564","name":"Podio, Matias","rank":"FO","years":3},{"id":"34511276","name":"Raffaele, Nicolas","rank":"FO","years":5},{"id":"36904929","name":"Raffo, Juan Ignacio","rank":"FO","years":3},{"id":"37952056","name":"Ricaldone Facundo ","rank":"FO","years":1},{"id":"31859858","name":"Rohde, Carlos","rank":"FO","years":2},{"id":"38995825","name":"Ruiz, Alan","rank":"FO","years":1},{"id":"34914102","name":"Saenz, Nicolas","rank":"FO","years":2},{"id":"35512408","name":"Sarli, Sebastian","rank":"FO","years":1},{"id":"36702148","name":"Soria, Ignacio","rank":"FO","years":1},{"id":"35427995","name":"Soto, Andres ","rank":"FO","years":1},{"id":"35774525","name":"Spiritoso, Mateo","rank":"FO","years":2},{"id":"40184340","name":"Tapiaca, Franco","rank":"FO","years":1},{"id":"32638558","name":"Tonelli, Laura","rank":"FO","years":3},{"id":"38668591","name":"Travaini, Emiliano","rank":"FO","years":1},{"id":"37482547","name":"Trevisan, Faustino","rank":"FO","years":2},{"id":"35945126","name":"Vaccarezza, Marina","rank":"FO","years":3},{"id":"38579975","name":"Valenti Gaspar","rank":"FO","years":1},{"id":"33794921","name":"Viale, Ignacio","rank":"FO","years":3},{"id":"28579636","name":"Vivares, Martin","rank":"FO","years":1},{"id":"34390302","name":"Vugdelija, Axel","rank":"FO","years":1},{"id":"35532316","name":"Zandona, Adriano","rank":"FO","years":1},{"id":"42882803","name":"Zukowski, Felipe","rank":"FO","years":1}];
+var DOCS = [
+  {id:"cma",name:"CMA Certificado Medico",icon:"🏥"},
+  {id:"lic",name:"Licencia de piloto",icon:"✈️"},
+  {id:"pas",name:"Pasaporte",icon:"🛂"},
+  {id:"visa",name:"Visa USA",icon:"🇺🇸"},
+  {id:"sim",name:"Recurrente simulador",icon:"🎮"},
+  {id:"ruta",name:"Inspeccion de ruta",icon:"📋"},
+  {id:"rroo",name:"Licencia RROO",icon:"📄"},
+  {id:"dni",name:"DNI",icon:"🪪"}
+];
+var TODAY = new Date("2026-03-18");
+var pilots = RAW.map(function(p){
+  return {
+    id: p.id, name: p.name, rank: p.rank, years: p.years,
+    docs: DOCS.map(function(d){ return {id:d.id,name:d.name,icon:d.icon,exp:null}; })
+  };
+});
+var cur = null, scanned = null;
+
+function dd(s){ return s ? Math.round((new Date(s)-TODAY)/86400000) : null; }
+function st(d){ return d===null?"missing":d<60?"danger":d<180?"warn":"ok"; }
+function fd(s){ if(!s) return "--"; var p=s.split("-"); return p[2]+"/"+p[1]+"/"+p[0]; }
+function ini(n){ var p=n.split(","); return (p[0].trim()[0]+(p[1]?p[1].trim()[0]:"")).toUpperCase(); }
+
+function buildList(list){
+  var h="";
+  list.forEach(function(p){
+    var cls="itm"+(cur&&cur.id===p.id?" on":"");
+    h+='<div class="'+cls+'" data-id="'+p.id+'">';
+    h+='<div class="av">'+ini(p.name)+'</div>';
+    h+='<div class="inf"><div class="nm">'+p.name+'</div>';
+    h+='<div class="rk">'+p.rank+' &middot; EZE &middot; '+p.years+'a</div></div></div>';
+  });
+  document.getElementById("plist").innerHTML = h;
+}
+
+function showPilot(){
+  var p=cur; if(!p) return;
+  var ok=0,wn=0,dn=0,ms=0;
+  var en=p.docs.map(function(d){
+    var days=dd(d.exp), s=st(days);
+    if(s==="ok")ok++; else if(s==="warn")wn++; else if(s==="danger")dn++; else ms++;
+    return {id:d.id,name:d.name,icon:d.icon,exp:d.exp,days:days,s:s};
+  });
+  var crit=en.filter(function(d){return d.s==="danger"||d.s==="warn";});
+  crit.sort(function(a,b){return (a.days===null?999:a.days)-(b.days===null?999:b.days);});
+
+  var tc=p.rank==="CP"?"tcp":p.rank==="FO"?"tfo":"tg";
+  var kc=dn>0?"danger":wn>0?"warn":"ok";
+  var mc=ms>0?"warn":"ok";
+
+  var h='<div class="pcard"><div class="pcard-l">';
+  h+='<div class="bav">'+ini(p.name)+'</div>';
+  h+='<div><h1>'+p.name+'</h1><div class="tags">';
+  h+='<span class="tag '+tc+'">'+p.rank+'</span>';
+  h+='<span class="tag tg">EZE</span>';
+  h+='<span class="tag tg">'+p.years+' anos</span>';
+  h+='<span class="tag tg" style="font-family:monospace">'+p.id+'</span>';
+  h+='</div></div></div>';
+  h+='<button class="pbtn scan-open">Escanear documento</button></div>';
+
+  h+='<div class="krow">';
+  h+='<div class="kc"><div class="kl">Vigentes</div><div class="kv ok">'+ok+'</div><div class="ks">de '+p.docs.length+'</div></div>';
+  h+='<div class="kc"><div class="kl">Por vencer / Criticos</div><div class="kv '+kc+'">'+(wn+dn)+'</div><div class="ks">'+dn+' criticos / '+wn+' por vencer</div></div>';
+  h+='<div class="kc"><div class="kl">Sin cargar</div><div class="kv '+mc+'">'+ms+'</div><div class="ks">pendientes</div></div>';
+  h+='</div>';
+
+  if(crit.length){
+    h+='<div class="ap"><div class="at">Vencimientos que requieren atencion</div>';
+    crit.forEach(function(d){
+      h+='<div class="ai"><span style="font-size:18px;width:26px;text-align:center">'+d.icon+'</span>';
+      h+='<div style="flex:1;font-size:13px;font-weight:500">'+d.name+'</div>';
+      h+='<span style="font-size:12px;color:#6b7399;margin-right:8px">'+fd(d.exp)+'</span>';
+      h+='<span class="bdg '+d.s+'">'+(d.days!==null?d.days+" dias":"sin fecha")+'</span></div>';
+    });
+    h+='</div>';
+  }
+
+  var labels={ok:"Vigente",warn:"Por vencer",danger:"Critico",missing:"Sin cargar"};
+  h+='<div class="sh"><div class="st">Documentos del legajo</div><div class="ss">'+p.docs.length+' documentos</div></div>';
+  h+='<div class="dgrid">';
+  en.forEach(function(d){
+    var dt=d.days===null?"Sin fecha":d.days>0?"Vence en "+d.days+" dias":"Vencio hace "+Math.abs(d.days)+" dias";
+    h+='<div class="dc"><div class="dt '+d.s+'"></div><div class="db">';
+    h+='<div class="di">'+d.icon+'</div>';
+    h+='<div class="dn">'+d.name+'</div>';
+    h+='<div class="dd">'+fd(d.exp)+'</div>';
+    h+='<span class="dp '+d.s+'">'+labels[d.s]+'</span>';
+    h+='<div class="ddays">'+dt+'</div></div></div>';
+  });
+  h+='</div>';
+  document.getElementById("main").innerHTML=h;
+}
+
+function filter(q){
+  var fl=pilots.filter(function(p){
+    return p.name.toLowerCase().indexOf(q.toLowerCase())>=0||p.id.indexOf(q)>=0;
+  });
+  buildList(fl);
+}
+
+// Events
+document.getElementById("plist").addEventListener("click",function(e){
+  var item=e.target.closest("[data-id]");
+  if(!item) return;
+  var id=item.getAttribute("data-id");
+  pilots.forEach(function(p){if(p.id===id)cur=p;});
+  buildList(pilots);
+  showPilot();
+});
+
+document.getElementById("srch").addEventListener("input",function(){filter(this.value);});
+
+function openScan(){document.getElementById("ov").classList.add("open");}
+function closeModal(){
+  document.getElementById("ov").classList.remove("open");
+  document.getElementById("uz").style.display="block";
+  document.getElementById("pv").classList.remove("show");
+  document.getElementById("az").classList.remove("show");
+  document.getElementById("rb").classList.remove("show");
+  document.getElementById("btn-save").classList.remove("show");
+  scanned=null;
+}
+
+document.getElementById("scan-btn").addEventListener("click",openScan);
+document.getElementById("main").addEventListener("click",function(e){if(e.target.classList.contains("scan-open"))openScan();});
+document.getElementById("btn-cancel").addEventListener("click",closeModal);
+
+document.getElementById("file-input").addEventListener("change",function(){
+  var file=this.files[0]; if(!file) return;
+  var r=new FileReader();
+  r.onload=function(e){
+    document.getElementById("pimg").src=e.target.result;
+    document.getElementById("pv").classList.add("show");
+    document.getElementById("uz").style.display="none";
+    analyze(e.target.result);
+  };
+  r.readAsDataURL(file);
+});
+
+async function analyze(b64img){
+  document.getElementById("az").classList.add("show");
+  var b64=b64img.split(",")[1], mt=b64img.split(";")[0].split(":")[1];
+  var prompt = "Extrae datos de este documento de piloto. Responde solo con JSON: {doc_type, holder_name, doc_number, expiry_date en DD/MM/YYYY o null, notes o null}";
+  try{
+    var payload = {
+      model: "claude-sonnet-4-20250514",
+      max_tokens: 500,
+      messages: [{
+        role: "user",
+        content: [
+          {type: "image", source: {type: "base64", media_type: mt, data: b64}},
+          {type: "text", text: prompt}
+        ]
+      }]
+    };
+    var res=await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify(payload)
+    });
+    var data=await res.json();
+    var txt=data.content&&data.content[0]?data.content[0].text:"{}";
+    scanned=JSON.parse(txt.replace(/```[a-z]*/g,"").replace(/```/g,"").trim());
+  }catch(e){
+    scanned={doc_type:"CMA Certificacion Medica",holder_name:"",doc_number:null,expiry_date:null,notes:null};
+  }
+  document.getElementById("az").classList.remove("show");
+  document.getElementById("r-type").textContent=scanned.doc_type||"-";
+  document.getElementById("r-name").textContent=scanned.holder_name||"-";
+  document.getElementById("r-num").textContent=scanned.doc_number||"-";
+  document.getElementById("r-date").textContent=scanned.expiry_date||"Sin vencimiento";
+  document.getElementById("r-notes").textContent=scanned.notes||"-";
+  document.getElementById("rb").classList.add("show");
+  document.getElementById("btn-save").classList.add("show");
+}
+
+document.getElementById("btn-save").addEventListener("click",function(){
+  if(!scanned||!cur){closeModal();return;}
+  var tl=(scanned.doc_type||"").toLowerCase();
+  var map={cma:["cma","medic","certificacion"],lic:["licencia de piloto","pilot"],pas:["pasaporte","passport"],visa:["visa"],sim:["simulador","recurrente"],ruta:["ruta","inspeccion"],rroo:["rroo"],dni:["dni","documento nacional"]};
+  var mid=null;
+  Object.keys(map).forEach(function(k){if(!mid&&map[k].some(function(w){return tl.indexOf(w)>=0;}))mid=k;});
+  if(mid&&scanned.expiry_date){
+    cur.docs.forEach(function(d){
+      if(d.id===mid){
+        var pts=scanned.expiry_date.split("/");
+        if(pts.length===3){
+          var m=pts[1].length<2?"0"+pts[1]:pts[1];
+          var dy=pts[0].length<2?"0"+pts[0]:pts[0];
+          d.exp=pts[2]+"-"+m+"-"+dy;
+        }
+      }
+    });
+  }
+  closeModal();showPilot();buildList(pilots);
+  var t=document.getElementById("toast");
+  t.textContent="Guardado en legajo de "+cur.name;
+  t.classList.add("show");
+  setTimeout(function(){t.classList.remove("show");},3000);
+});
+
+buildList(pilots);
+</script>
+</body>
+</html>
